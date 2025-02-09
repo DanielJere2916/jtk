@@ -219,7 +219,7 @@ form button:hover {
 <div class="content">
     <div class="welcome-section">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="welcome-header"><i class="nav-icon"><img src="../assets/fonts/greet.png" alt="greet"></i> Hi, <?php echo isset($_SESSION['first_name']) && isset($_SESSION['last_name']) ? $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] : ''; ?></h3>
+            <h3 class="welcome-header"><i class="nav-icon"><img src="../assets/fonts/pro.png" alt="greet"></i><?php echo isset($_SESSION['first_name']) && isset($_SESSION['last_name']) ? $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] : ''; ?> - <small>LLB (Hons) Mw</small></h3>
             <div class="profile-image">
                 <img src="<?php echo isset($_SESSION['profile_image']) ? '../images/' . $_SESSION['profile_image'] : '../images/default.png'; ?>" alt="Profile Image" style="width: 50px; height: 50px; border-radius: 50%;">
             </div>

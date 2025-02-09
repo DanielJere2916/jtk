@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 08, 2025 at 12:13 AM
+-- Generation Time: Feb 09, 2025 at 06:52 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -61,8 +61,17 @@ CREATE TABLE `cases` (
   `case_details` text NOT NULL,
   `created_at` datetime NOT NULL,
   `case_name` varchar(255) NOT NULL,
-  `case_type` varchar(30) NOT NULL
+  `case_type` varchar(30) NOT NULL,
+  `lawyer_id` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cases`
+--
+
+INSERT INTO `cases` (`case_id`, `user_id`, `status`, `case_number`, `case_details`, `created_at`, `case_name`, `case_type`, `lawyer_id`) VALUES
+(6, 9, 'Open', 'JTK/001/25', '', '2025-02-08 01:46:51', 'Property Transfer', 'Notary Public', 0),
+(7, 1, 'Pending', 'JTK/002/25', '', '2025-02-08 04:36:52', 'Mediating', 'Mediation & Conflict Resolutio', 0);
 
 -- --------------------------------------------------------
 
@@ -163,7 +172,7 @@ CREATE TABLE `users` (
   `user_id` int(10) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` varchar(20) DEFAULT NULL,
+  `role` enum('client','lawyer','accountant','manager') DEFAULT NULL,
   `verification_code` varchar(32) NOT NULL,
   `verified_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -175,6 +184,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password`, `role`, `verification_code`, `verified_at`, `created_at`, `updated_at`) VALUES
+(1, 'wchirwa001@gmail.com', '$2y$10$p6PLtC8DL25e1pgdvTc/TOv62zS2p4WWBD7AoizOFG55PhGn8XzBC', 'lawyer', '', '2025-02-12 03:37:34', '2025-02-08 02:37:34', '2025-02-08 02:37:34'),
 (9, 'cen-01-41-21@unilia.ac.mw', '$2y$10$2jezoJy492S1BAopiaKuRehqizG3MWrqyv2dxffwEd.ZZMSIqceNu', 'client', '33961d88510cc51feb36211825cbd712', '2025-02-07 14:38:33', '2025-02-07 14:37:52', '2025-02-07 14:37:52');
 
 -- --------------------------------------------------------
@@ -199,7 +209,8 @@ CREATE TABLE `user_profiles` (
 --
 
 INSERT INTO `user_profiles` (`profile_id`, `user_id`, `first_name`, `last_name`, `phone`, `address`, `city`, `photo`) VALUES
-(6, 9, 'WALUSUNGU', 'CHIRWA', '0882667299', 'SWRWEZ242333333', 'Kasungu', 'images/default_photo.jpg');
+(6, 9, 'WALUSUNGU', 'CHIRWA', '0882667299', 'SWRWEZ242333333', 'Kasungu', 'images/default_photo.jpg'),
+(8, 1, 'VICTOR C', 'GONDWE', '0882667288', 'P/BAG 79\r\nMZUZU', 'MZUZU', '');
 
 --
 -- Indexes for dumped tables
@@ -223,7 +234,7 @@ ALTER TABLE `bills`
 --
 ALTER TABLE `cases`
   ADD PRIMARY KEY (`case_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `cases_ibfk_1` (`user_id`);
 
 --
 -- Indexes for table `consultation`
@@ -296,7 +307,7 @@ ALTER TABLE `bills`
 -- AUTO_INCREMENT for table `cases`
 --
 ALTER TABLE `cases`
-  MODIFY `case_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `case_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `consultation`
@@ -338,13 +349,13 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `user_profiles`
 --
 ALTER TABLE `user_profiles`
-  MODIFY `profile_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `profile_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
@@ -360,7 +371,7 @@ ALTER TABLE `bills`
 -- Constraints for table `cases`
 --
 ALTER TABLE `cases`
-  ADD CONSTRAINT `cases_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+  ADD CONSTRAINT `cases_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `documents`

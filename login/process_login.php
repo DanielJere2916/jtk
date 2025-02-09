@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = $_POST['password'];
 
         // Get user data
-        $sql = "SELECT u.user_id, u.email, u.password, u.verified_at, u.role, p.first_name, p.last_name 
+        $sql = "SELECT u.user_id, u.email, u.password, u.verified_at, u.role, p.first_name, p.last_name, p.photo, p.phone 
                 FROM users u 
                 LEFT JOIN user_profiles p ON u.user_id = p.user_id 
                 WHERE u.email = ?";
@@ -27,11 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        if ($user['verified_at'] === null) {
-            $_SESSION['error'] = 'Please verify your email before logging in';
-            header('Location: login.php');
-            exit();
-        }
+        // if ($user['verified_at'] === null) {
+        //     $_SESSION['error'] = 'Please verify your email before logging in';
+        //     header('Location: login.php');
+        //     exit();
+        // }
 
         // Set session variables
         $_SESSION['user_id'] = $user['user_id'];
@@ -39,11 +39,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['role'] = $user['role'];
         $_SESSION['first_name'] = $user['first_name'];
         $_SESSION['last_name'] = $user['last_name'];
-        $_SESSION['profile_image']= $user['photo'];
-        $_SESSION['phone']= $user['phone'];
+        $_SESSION['profile_image'] = $user['photo'];
+        $_SESSION['phone'] = $user['phone'];
 
-        // Redirect to dashboard
-        header('Location: ../client/dashboard.php');
+        // Redirect based on user role
+        switch ($user['role']) {
+            case 'client':
+                header('Location: ../client/dashboard.php');
+                break;
+            case 'lawyer':
+                header('Location: ../lawyer/dashboard.php');
+                break;
+            case 'accountant':
+                header('Location: ../finance/dashboard.php');
+                break;
+            case 'manager':
+                header('Location: ../manager/dashboard.php');
+                break;
+            default:
+                $_SESSION['error'] = 'Invalid user role';
+                header('Location: login.php');
+                break;
+        }
         exit();
     } catch (Exception $e) {
         $_SESSION['error'] = 'An error occurred. Please try again.';
